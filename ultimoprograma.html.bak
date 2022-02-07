@@ -1,0 +1,112 @@
+<meta charset="UTF-8">
+
+<canvas width="600" height="400"></canvas>
+
+<script>
+	
+	function desenhaQuadrado(x, y, tamanho, cor) {
+
+        pincel.fillStyle = cor;
+        pincel.fillRect(x, y, tamanho, tamanho)
+        pincel.fill();
+    }
+
+    function desenhaCirculo(x, y, raio, corAtual) {
+		
+		pincel.fillStyle = corAtual;
+		pincel.beginPath();
+		pincel.arc(x, y, raio, 0, 2 * 3.14);
+		pincel.fill();
+		
+    }
+
+    function desenhaPaletaDeCores() {
+
+        desenhaQuadrado(xVerde, yQuadrados, tamanhoQuadrados, 'green');
+        desenhaQuadrado(xAzul, yQuadrados, tamanhoQuadrados, 'blue');
+		desenhaQuadrado(xVermelho, yQuadrados, tamanhoQuadrados, 'red');
+
+    }
+
+    function lidaComMovimentoDoMouse(evento) {
+
+        var x = evento.pageX - tela.offsetLeft;
+        var y = evento.pageY - tela.offsetTop;
+
+        if(desenha && podeDesenharNaArea(x,y)) {
+
+            desenhaCirculo(x, y, 5, corAtual);
+        }
+    }
+	
+	function mudaDeCor(evento) {
+	
+		var clickX = evento.pageX - tela.offsetLeft;
+		var clickY = evento.pageY - tela.offsetTop;
+	
+		if(clickY > yQuadrados && clickY < tamanhoQuadrados) {
+			if((clickX > xVermelho) 
+			&& (clickX < xVerde)) {
+				corAtual = 'red';
+			} else if((clickX > xVerde)
+			&& (clickX < xAzul)) {
+				corAtual = 'green';
+			} else if((clickX > xAzul)
+			&& (clickX < xAzul + tamanhoQuadrados)) {
+				corAtual = 'blue';
+			}
+		}
+	}
+
+
+    function habilitaDesenhar() {
+
+        desenha = true;
+    }
+
+    function desabilitaDesenhar() {
+
+        desenha = false;
+    }
+	
+	function podeDesenharNaArea(x,y) {
+		if(x >= 0 && x < 3*tamanhoQuadrados && y >= 0 && y < tamanhoQuadrados) {
+			return false;
+		} else {
+			return true;
+		}
+	
+	}
+	
+	function exibirBoasVindas(mensagem) {
+		alert(mensagem);
+	}
+
+	exibirBoasVindas('Selecione uma cor e faça a sua arte!");
+	
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+    pincel.fillStyle = 'lightgray';
+    pincel.fillRect(0, 0, 600, 400);
+
+	var corAtual;
+	var cor;
+	
+    var desenha = false;
+    var xVermelho = 0;
+    var xVerde  = 50;
+    var xAzul = 100;
+    var yQuadrados = 0;
+    var tamanhoQuadrados = 50;
+
+    desenhaPaletaDeCores(); // mostra os quadrados de seleção de cores
+
+	tela.onclick = mudaDeCor;
+
+    tela.onmousemove = lidaComMovimentoDoMouse;
+
+    tela.onmousedown = habilitaDesenhar;
+
+    tela.onmouseup = desabilitaDesenhar;
+
+</script>
